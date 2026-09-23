@@ -6,9 +6,9 @@ namespace PeterPedal;
 // Customer contact details for a repair case.
 class Customer
 {
-    public string FirstName;
-    public string LastName;
-    public string Phone;
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
+    public string Phone { get; set; }
 }
 
 class RepairCase
