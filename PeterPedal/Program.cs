@@ -155,9 +155,8 @@ class RepairService
     }
 
     // Sofia repairs the bike.
-    public void PimpMyBike(string frameNumber) {
-        var c = FindCase(frameNumber);
-        Console.WriteLine($"Sofia is repairing the bike, frame number {c.FrameNumber}...");
+    public void RepairBike(string frameNumber) {
+        Console.WriteLine($"Sofia is repairing the bike, frame number {FindCase(frameNumber).FrameNumber}...");
     }
 
     // Calculates the final total price for the receipt.
@@ -224,7 +223,7 @@ class Program
         service.LookUpParts("STL-4471");
         service.CalculateOffer("STL-4471");
         service.ApproveCase("STL-4471");
-        service.PimpMyBike("STL-4471");
+        service.RepairBike("STL-4471");
         service.FinishRepair("STL-4471");
         service.PayCase("STL-4471");
     }
