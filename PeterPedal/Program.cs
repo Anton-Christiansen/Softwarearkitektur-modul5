@@ -125,7 +125,7 @@ class RepairService
     {
         var price = _catalog.GetPrice(part);
         
-        if (price is null) throw new  ArgumentNullException(nameof(part));
+        if (price is null) throw new ArgumentNullException(nameof(price));
         
         var markup = price.Value * 0.1m;
         return price.Value + markup;
@@ -134,16 +134,16 @@ class RepairService
 
     public void CalculateOffer(string frameNumber)
     {
-        var c = FindCase(frameNumber);
-        var price = CalculateTotal(c);
-        c.TotalPrice = price;
-        c.Status = 1;
+        var @case = FindCase(frameNumber);
+        var price = CalculateTotal(@case);
+        @case.TotalPrice = price;
+        @case.Status = 1;
 
-        const int d = 3;
-        string cstTlf = c.CustomerInfo.Phone;
-        Console.WriteLine($"Offer for case {frameNumber}: {price:F2} kr, delivery in {d} days.");
-        Console.WriteLine($"Calling {cstTlf}...");
-        _notifier.LeaveVoicemail(cstTlf);
+        const int days = 3;
+        var customerPhone = @case.CustomerInfo.Phone;
+        Console.WriteLine($"Offer for case {frameNumber}: {price:F2} kr, delivery in {days} days.");
+        Console.WriteLine($"Calling {customerPhone}...");
+        _notifier.LeaveVoicemail(customerPhone);
     }
 
     public void ApproveCase(string frameNumber)
