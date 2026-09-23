@@ -160,20 +160,10 @@ class RepairService
         return price + markup;
     }
 
-    // Calculates a price estimate for the customer's offer.
-    private decimal BeregnPris(RepairCase c)
-    {
-        var partsPrice = CalculatePriceForGearCable() + CalculatePriceForSprocket() + CalculatePriceForBrakePad();
-        const decimal labor = HourlyRate * 2;
-        var subtotal = partsPrice + labor;
-        var vat = subtotal * 0.25m;
-        return subtotal + vat;
-    }
-
     public void CalculateOffer(string frameNumber)
     {
         var c = FindCase(frameNumber);
-        var price = BeregnPris(c);
+        var price = CalculateTotal(c);
         c.TotalPrice = price;
         c.Status = 1;
 
