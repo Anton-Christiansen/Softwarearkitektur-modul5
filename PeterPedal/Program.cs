@@ -174,24 +174,27 @@ class RepairService
     {
         var c = FindCase(frameNumber);
 
-        if (c.Status == 2 && c.Parts.Count > 0 && c.Approved)
+        var approved = c.Status == 2 && c.Approved;
+        var containsParts = c.Parts.Count > 0;
+
+        if (approved is false || containsParts is false) return;
+        
+        var total = CalculateTotal(c);
+
+        if (total < 0)
         {
-            var total = CalculateTotal(c);
-
-            if (total < 0)
-            {
-                Console.WriteLine("Error: negative price");
-            }
-
-            c.TotalPrice = total;
-            c.Status = 3;
-
-            _notifier.SendSms(c.CustomerInfo.Phone, $"Hi {c.CustomerInfo.FirstName}, your bike is ready for pickup!");
-
-            Console.WriteLine("--- Receipt ---");
-            Console.WriteLine("Frame number: " + c.FrameNumber);
-            Console.WriteLine("Total: " + Math.Round(total, 2) + " kr");
+            Console.WriteLine("Error: negative price");
+            return;
         }
+
+        c.TotalPrice = total;
+        c.Status = 3;
+
+        _notifier.SendSms(c.CustomerInfo.Phone, $"Hi {c.CustomerInfo.FirstName}, your bike is ready for pickup!");
+
+        Console.WriteLine("--- Receipt ---");
+        Console.WriteLine($"Frame number: {c.FrameNumber}");
+        Console.WriteLine($"Total: {Math.Round(total, 2)} kr");
     }
 
     public void PayCase(string frameNumber)
