@@ -13,14 +13,14 @@ class Customer
 
 class RepairCase
 {
-    public string FrameNumber;
-    public string Problem;
-    public Customer CustomerInfo;
-    public List<string> Findings = new List<string>();
-    public List<string> Parts = new List<string>();
-    public int Status; // 0 = created, 1 = awaiting approval, 2 = approved, 3 = finished
-    public Boolean Approved;
-    public decimal TotalPrice;
+    public string FrameNumber { get; set; }
+    public string Problem { get; set; }
+    public Customer CustomerInfo { get; set; }
+    public List<string> Findings { get; } = [];
+    public List<string> Parts { get; } = [];
+    public int Status { get; set; } // 0 = created, 1 = awaiting approval, 2 = approved, 3 = finished
+    public bool Approved { get; set; }
+    public decimal TotalPrice { get; set; }
 }
 
 class SparePartCatalog
