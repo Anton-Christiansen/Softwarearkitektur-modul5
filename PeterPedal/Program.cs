@@ -119,30 +119,17 @@ class RepairService
 
         Console.WriteLine($"Found {c.Parts.Count} part(s) for case {frameNumber}.");
     }
-
-    // Calculates the price of a gear cable including markup.
-    private decimal CalculatePriceForGearCable()
+    
+    private decimal CalculatePriceWithMarkup(string part)
     {
-        const decimal price = 150m;
-        const decimal markup = price * 0.1m;
-        return price + markup;
+        var price = _catalog.GetPrice(part);
+        
+        if (price is null) throw new  ArgumentNullException(nameof(part));
+        
+        var markup = price.Value * 0.1m;
+        return price.Value + markup;
     }
-
-    // Calculates the price of a sprocket including markup.
-    private decimal CalculatePriceForSprocket()
-    {
-        const decimal price = 300m;
-        const decimal markup = price * 0.1m;
-        return price + markup;
-    }
-
-    // Calculates the price of brake pads including markup.
-    private decimal CalculatePriceForBrakePad()
-    {
-        const decimal price = 120m;
-        const decimal markup = price * 0.1m;
-        return price + markup;
-    }
+    
 
     public void CalculateOffer(string frameNumber)
     {
@@ -175,7 +162,7 @@ class RepairService
     // Calculates the final total price for the receipt.
     private decimal CalculateTotal(RepairCase c)
     {
-        var partsPrice = CalculatePriceForGearCable() + CalculatePriceForSprocket() + CalculatePriceForBrakePad();
+        var partsPrice = CalculatePriceWithMarkup("Gear cable") + CalculatePriceWithMarkup("Sprocket") + CalculatePriceWithMarkup("Brake pads");
         const decimal labor = HourlyRate * 2;
         var subtotal = partsPrice + labor;
         var vat = subtotal * 0.25m;
