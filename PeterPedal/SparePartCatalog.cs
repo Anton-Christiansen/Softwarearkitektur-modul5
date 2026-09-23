@@ -5,6 +5,8 @@ namespace PeterPedal;
 
 class SparePartCatalog
 {
+    private const decimal Discount = 0.2m;
+    
     private readonly Dictionary<string, decimal> _prices = new()
     {
         { "Gear cable", 150m },
@@ -12,11 +14,13 @@ class SparePartCatalog
         { "Brake pads", 120m }
     };
 
-    public decimal GetPrice(string partName)
+    public decimal GetPrice(string partName, Customer customer)
     {
         if (_prices.TryGetValue(partName, out var price))
         {
-            return price;
+            return customer.Discount
+                ? price * (1 - Discount)
+                : price;
         }
         
         throw new ArgumentNullException(partName);

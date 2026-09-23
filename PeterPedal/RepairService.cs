@@ -12,15 +12,8 @@ class RepairService
 
     private const decimal HourlyRate = 450;
 
-    public void CreateCase(string firstName, string lastName, string phone, string frameNumber, string problem)
+    public void CreateCase(Customer customer, string frameNumber, string problem)
     {
-        var customer = new Customer
-        {
-            FirstName = firstName,
-            LastName = lastName,
-            Phone = phone
-        };
-
         var @case = new RepairCase
         {
             FrameNumber = frameNumber,
@@ -52,7 +45,7 @@ class RepairService
         }
     }
 
-    public void LookUpParts(string frameNumber)
+    public void LookUpParts(string frameNumber, Customer customer)
     {
         var c = FindCase(frameNumber);
 
@@ -63,16 +56,17 @@ class RepairService
             
             
             c.Parts.Add(part);
-            Console.WriteLine($"Found part for case {c.FrameNumber}: {part} ({_catalog.GetPrice(part)} kr)");
+            Console.WriteLine($"Found part for case {c.FrameNumber}: {part} ({_catalog.GetPrice(part, customer)} kr)");
         }
 
         Console.WriteLine($"Found {c.Parts.Count} part(s) for case {frameNumber}.");
     }
     
-    private decimal CalculatePriceWithMarkup(string part)
+    private decimal CalculatePriceWithMarkup(string part, Customer customer)
     {
-        var price = _catalog.GetPrice(part);
+        var price = _catalog.GetPrice(part, customer);
         var markup = price * 0.1m;
+
         return price + markup;
     }
     
@@ -106,7 +100,7 @@ class RepairService
     // Calculates the final total price for the receipt.
     private decimal CalculateTotal(RepairCase @case)
     {
-        var partsPrice = @case.Parts.Sum(CalculatePriceWithMarkup);
+        var partsPrice = @case.Parts.Sum(part => CalculatePriceWithMarkup(part, @case.CustomerInfo));
         const decimal vatRate = 0.25m;
         
         const decimal labor = HourlyRate * 2;

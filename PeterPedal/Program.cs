@@ -8,10 +8,17 @@ class Program
     static void Main(string[] args)
     {
         var service = new RepairService();
-
-        service.CreateCase("Egon", "Cykelmyggen", "20123456", "STL-4471", "The gears are not shifting properly and the bike is almost impossible to ride.");
+        var customer = new Customer
+        {
+            FirstName = "Egon",
+            LastName = "Cykelmyggen",
+            Phone = "20123456",
+            Discount = true
+        };
+        
+        service.CreateCase(customer, "STL-4471", "The gears are not shifting properly and the bike is almost impossible to ride.");
         service.RegisterFindings("STL-4471", new List<string> { "Gear cable needs replacement", "Sprocket is worn", "Brake pads are worn" });
-        service.LookUpParts("STL-4471");
+        service.LookUpParts("STL-4471", customer);
         service.CalculateOffer("STL-4471");
         service.ApproveCase("STL-4471");
         service.RepairBike("STL-4471");
