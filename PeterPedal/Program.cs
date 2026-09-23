@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace PeterPedal;
 
@@ -34,9 +35,9 @@ class SparePartCatalog
 
     public decimal? GetPrice(string partName)
     {
-        if (_prices.TryGetValue(partName, out var price))
+        if (_prices.Keys.Any(p => p.Contains(partName)))
         {
-            return price;
+            return _prices[partName];
         }
 
         return null;
