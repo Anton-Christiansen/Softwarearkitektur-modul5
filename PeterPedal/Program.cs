@@ -148,10 +148,10 @@ class RepairService
 
     public void ApproveCase(string frameNumber)
     {
-        var c = FindCase(frameNumber);
-        c.Approved = true;
-        c.Status = 2;
-        Console.WriteLine($"{c.CustomerInfo.FirstName} accepted the offer.");
+        var @case = FindCase(frameNumber);
+        @case.Approved = true;
+        @case.Status = 2;
+        Console.WriteLine($"{@case.CustomerInfo.FirstName} accepted the offer.");
     }
 
     // Sofia repairs the bike.
