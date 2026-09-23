@@ -89,23 +89,18 @@ class RepairService
 
     public void RegisterFindings(string frameNumber, List<string> findings)
     {
-        var c = FindCase(frameNumber);
-        if (c != null)
+        var @case = FindCase(frameNumber);
+        
+        if (@case == null) return;
+        if (findings == null) return;
+        if (findings.Count <= 0) return;
+        
+        foreach (var finding in findings)
         {
-            if (findings != null)
-            {
-                if (findings.Count > 0)
-                {
-                    foreach (var finding in findings)
-                    {
-                        if (finding != "")
-                        {
-                            c.Findings.Add(finding);
-                            Console.WriteLine("Finding registered: " + finding);
-                        }
-                    }
-                }
-            }
+            if (string.IsNullOrWhiteSpace(finding)) continue;
+            
+            @case.Findings.Add(finding);
+            Console.WriteLine("Finding registered: " + finding);
         }
     }
 
