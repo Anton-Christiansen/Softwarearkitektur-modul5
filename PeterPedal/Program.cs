@@ -33,14 +33,29 @@ class SparePartCatalog
         { "Brake pads", 120m }
     };
 
-    public decimal? GetPrice(string partName)
+    public decimal GetPrice(string partName)
     {
-        if (_prices.Keys.Any(p => p.Contains(partName)))
+        if (_prices.TryGetValue(partName, out var price))
         {
-            return _prices[partName];
+            return price;
+        }
+        
+        throw new ArgumentNullException(partName);
+    }
+
+    public bool Resolve(string query, out string name)
+    {
+        name = string.Empty;
+        foreach (var key in _prices.Keys)
+        {
+            if (query.Contains(key,  StringComparison.InvariantCultureIgnoreCase))
+            {
+                name = key;
+                return true;
+            }
         }
 
-        return null;
+        return false;
     }
 }
 
@@ -111,11 +126,12 @@ class RepairService
 
         foreach (var finding in c.Findings)
         {
-            var price = _catalog.GetPrice(finding);
-            if (price is null) continue;
             
-            c.Parts.Add(finding);
-            Console.WriteLine($"Found part for case {c.FrameNumber}: {finding} ({price} kr)");
+            if (_catalog.Resolve(finding, out var part) is false) continue;
+            
+            
+            c.Parts.Add(part);
+            Console.WriteLine($"Found part for case {c.FrameNumber}: {part} ({_catalog.GetPrice(part)} kr)");
         }
 
         Console.WriteLine($"Found {c.Parts.Count} part(s) for case {frameNumber}.");
@@ -124,11 +140,8 @@ class RepairService
     private decimal CalculatePriceWithMarkup(string part)
     {
         var price = _catalog.GetPrice(part);
-        
-        if (price is null) throw new ArgumentNullException(nameof(part));
-        
-        var markup = price.Value * 0.1m;
-        return price.Value + markup;
+        var markup = price * 0.1m;
+        return price + markup;
     }
     
 
