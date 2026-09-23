@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 
+namespace PeterPedal;
+
 // Customer contact details for a repair case.
-class RepairCaseData
+class Customer
 {
     public string FirstName;
     public string LastName;
@@ -13,7 +15,7 @@ class RepairCase
 {
     public string FrameNumber;
     public string Problem;
-    public RepairCaseData CustomerInfo;
+    public Customer CustomerInfo;
     public List<string> Findings = new List<string>();
     public List<string> Parts = new List<string>();
     public int Status; // 0 = created, 1 = awaiting approval, 2 = approved, 3 = finished
@@ -63,7 +65,7 @@ class repairService
 
     public void CreateCase(string firstName, string lastName, string phone, string FrameNumber, string problem)
     {
-        RepairCaseData customer = new RepairCaseData();
+        Customer customer = new Customer();
         customer.FirstName = firstName;
         customer.LastName = lastName;
         customer.Phone = phone;
