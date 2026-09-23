@@ -125,7 +125,7 @@ class RepairService
     {
         var price = _catalog.GetPrice(part);
         
-        if (price is null) throw new ArgumentNullException(nameof(price));
+        if (price is null) throw new ArgumentNullException(nameof(part));
         
         var markup = price.Value * 0.1m;
         return price.Value + markup;
@@ -154,18 +154,19 @@ class RepairService
         Console.WriteLine($"{@case.CustomerInfo.FirstName} accepted the offer.");
     }
 
-    // Sofia repairs the bike.
     public void RepairBike(string frameNumber) {
         Console.WriteLine($"Sofia is repairing the bike, frame number {FindCase(frameNumber).FrameNumber}...");
     }
 
     // Calculates the final total price for the receipt.
-    private decimal CalculateTotal(RepairCase c)
+    private decimal CalculateTotal(RepairCase @case)
     {
-        var partsPrice = CalculatePriceWithMarkup("Gear cable") + CalculatePriceWithMarkup("Sprocket") + CalculatePriceWithMarkup("Brake pads");
+        var partsPrice = @case.Parts.Sum(CalculatePriceWithMarkup);
+        const decimal vatRate = 0.25m;
+        
         const decimal labor = HourlyRate * 2;
         var subtotal = partsPrice + labor;
-        var vat = subtotal * 0.25m;
+        var vat = subtotal * vatRate;
         return subtotal + vat;
     }
 
