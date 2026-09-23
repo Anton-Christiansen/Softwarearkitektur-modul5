@@ -110,22 +110,11 @@ class RepairService
 
         foreach (var finding in c.Findings)
         {
-            string stlnr = c.FrameNumber;
-            if (finding.Contains("Gear cable"))
-            {
-                c.Parts.Add("Gear cable");
-                Console.WriteLine($"Found part for case {stlnr}: Gear cable ({_catalog.GetPrice("Gear cable")} kr)");
-            }
-            else if (finding.Contains("Sprocket"))
-            {
-                c.Parts.Add("Sprocket");
-                Console.WriteLine($"Found part for case {stlnr}: Sprocket ({_catalog.GetPrice("Sprocket")} kr)");
-            }
-            else if (finding.Contains("Brake pads"))
-            {
-                c.Parts.Add("Brake pads");
-                Console.WriteLine($"Found part for case {stlnr}: Brake pads ({_catalog.GetPrice("Brake pads")} kr)");
-            }
+            var price = _catalog.GetPrice(finding);
+            if (price is null) continue;
+            
+            c.Parts.Add(finding);
+            Console.WriteLine($"Found part for case {c.FrameNumber}: {finding} ({price} kr)");
         }
 
         Console.WriteLine($"Found {c.Parts.Count} part(s) for case {frameNumber}.");
