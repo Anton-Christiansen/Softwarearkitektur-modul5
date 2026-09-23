@@ -32,13 +32,14 @@ class SparePartCatalog
         { "Brake pads", 120m }
     };
 
-    public decimal GetPrice(string partName)
+    public decimal? GetPrice(string partName)
     {
-        if (_prices.ContainsKey(partName))
+        if (_prices.TryGetValue(partName, out var price))
         {
-            return _prices[partName];
+            return price;
         }
-        return 0m;
+
+        return null;
     }
 }
 
