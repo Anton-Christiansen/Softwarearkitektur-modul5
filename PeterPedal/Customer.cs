@@ -1,9 +1,12 @@
 namespace PeterPedal;
 
-class Customer
+/// <summary>
+/// Containing rudimentary information about the customer and if the customer applies for a discount on spareparts. 
+/// </summary>
+public class Customer
 {
-    public string FirstName { get; init; }
-    public string LastName { get; init; }
-    public string Phone { get; init; }
-    public bool Discount { get; set; }
+    internal string FirstName { get; init; }
+    internal string LastName { get; init; }
+    internal string Phone { get; init; }
+    internal bool Discount { get; set; }
 }

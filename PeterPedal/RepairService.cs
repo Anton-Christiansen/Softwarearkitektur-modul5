@@ -4,7 +4,10 @@ using System.Linq;
 
 namespace PeterPedal;
 
-class RepairService
+/// <summary>
+/// The service encapsulating the use cases pertaining to repair
+/// </summary>
+public class RepairService
 {
     private readonly List<RepairCase> _cases = [];
     private readonly SparePartCatalog _catalog = new();
@@ -12,6 +15,12 @@ class RepairService
 
     private const decimal HourlyRate = 450;
 
+    /// <summary>
+    /// Creates a case on a specific bike for a customer with a given problem description
+    /// </summary>
+    /// <param name="customer">The customer</param>
+    /// <param name="frameNumber">The bikes unique frame number</param>
+    /// <param name="problem">The problem description from the customer</param>
     public void CreateCase(Customer customer, string frameNumber, string problem)
     {
         var @case = new RepairCase
@@ -28,6 +37,11 @@ class RepairService
         Console.WriteLine($"Problem: {problem}");
     }
 
+    /// <summary>
+    /// Registers the identified problems
+    /// </summary>
+    /// <param name="frameNumber">The bikes unique frame number</param>
+    /// <param name="findings">A list of the identified problems</param>
     public void RegisterFindings(string frameNumber, List<string> findings)
     {
         var @case = FindCase(frameNumber);
@@ -45,6 +59,11 @@ class RepairService
         }
     }
 
+    /// <summary>
+    /// Looks up the parts in the spare part catalog
+    /// </summary>
+    /// <param name="frameNumber">The bikes unique frame number</param>
+    /// <param name="customer">The customer</param>
     public void LookUpParts(string frameNumber, Customer customer)
     {
         var c = FindCase(frameNumber);
@@ -62,6 +81,7 @@ class RepairService
         Console.WriteLine($"Found {c.Parts.Count} part(s) for case {frameNumber}.");
     }
     
+    
     private decimal CalculatePriceWithMarkup(string part, Customer customer)
     {
         var price = _catalog.GetPrice(part, customer);
@@ -71,6 +91,10 @@ class RepairService
     }
     
 
+    /// <summary>
+    /// Calculates and offer and send it to the customer
+    /// </summary>
+    /// <param name="frameNumber">The bikes unique frame number</param>
     public void CalculateOffer(string frameNumber)
     {
         var @case = FindCase(frameNumber);
@@ -85,6 +109,11 @@ class RepairService
         _notifier.LeaveVoicemail(customerPhone);
     }
 
+    
+    /// <summary>
+    /// Approves the case on the bike
+    /// </summary>
+    /// <param name="frameNumber">The bikes unique frame number</param>
     public void ApproveCase(string frameNumber)
     {
         var @case = FindCase(frameNumber);
@@ -93,11 +122,14 @@ class RepairService
         Console.WriteLine($"{@case.CustomerInfo.FirstName} accepted the offer.");
     }
 
+    /// <summary>
+    /// Repairs the bike
+    /// </summary>
+    /// <param name="frameNumber">The bikes unique frame number</param>
     public void RepairBike(string frameNumber) {
         Console.WriteLine($"Sofia is repairing the bike, frame number {FindCase(frameNumber).FrameNumber}...");
     }
 
-    // Calculates the final total price for the receipt.
     private decimal CalculateTotal(RepairCase @case)
     {
         var partsPrice = @case.Parts.Sum(part => CalculatePriceWithMarkup(part, @case.CustomerInfo));
@@ -109,6 +141,10 @@ class RepairService
         return subtotal + vat;
     }
 
+    /// <summary>
+    /// Finishes the repair
+    /// </summary>
+    /// <param name="frameNumber">The bikes unique frame number</param>
     public void FinishRepair(string frameNumber)
     {
         var @case = FindCase(frameNumber);
@@ -136,6 +172,11 @@ class RepairService
         Console.WriteLine($"Total: {Math.Round(total, 2)} kr");
     }
 
+    
+    /// <summary>
+    /// Customer pays for the service provided
+    /// </summary>
+    /// <param name="frameNumber">The bikes unique frame number</param>
     public void PayCase(string frameNumber)
     {
         var result = FindCase(frameNumber);

@@ -2,8 +2,10 @@ using System.Collections.Generic;
 
 namespace PeterPedal;
 
-
-class Program
+/// <summary>
+/// Where the program starts 
+/// </summary>
+public class Program
 {
     static void Main(string[] args)
     {
